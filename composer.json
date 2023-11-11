@@ -1,0 +1,23 @@
+{
+  "name": "igentu/module-service-fee",
+  "version": "1.0.0",
+  "description": "N/A",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*",
+    "magento/module-checkout": ">=100.4.1",
+    "magento/module-quote": ">=101.2.1",
+    "magento/module-sales-rule": ">=101.2.*"
+  },
+  "license": [
+    "Proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Igentu\\ServiceFee\\": ""
+    }
+  }
+}

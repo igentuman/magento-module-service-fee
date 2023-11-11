@@ -1,0 +1,14 @@
+{
+  "igentu_servicefee_rule": {
+    "column": {
+      "rule_id": true,
+      "name": true,
+      "is_active": true,
+      "conditions_serialized": true,
+      "base_service_fee": true
+    },
+    "constraint": {
+      "PRIMARY": true
+    }
+  }
+}

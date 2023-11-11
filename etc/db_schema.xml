@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ This module was made as test task during recruitment.
+  ~
+  ~ MIT License
+  ~
+  ~ Copyright (c) 2023 Siarhei Astapchyk <igentuman@gmail.com>
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  ~ SOFTWARE.
+  -->
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd"
+>
+    <table name="quote" resource="checkout" comment="Sales Flat Quote">
+        <column xsi:type="decimal" name="base_service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+        <column xsi:type="decimal" name="service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+        <column xsi:type="varchar" name="applied_fee_ids" nullable="true" comment="Applied Fee IDS" length="255"/>
+    </table>
+    <table name="quote_address" resource="checkout" comment="Sales Flat Quote Address">
+        <column xsi:type="decimal" name="base_service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+        <column xsi:type="decimal" name="service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+    </table>
+    <table name="sales_order" resource="sales" comment="Sales Flat Order">
+        <column xsi:type="decimal" name="base_service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+        <column xsi:type="decimal" name="service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+    </table>
+    <table name="igentu_servicefee_rule" resource="default" engine="innodb" comment="Fee Rules Table">
+        <column xsi:type="int" name="rule_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Entity Id"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rule_id"/>
+        </constraint>
+        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
+        <column xsi:type="mediumtext" name="conditions_serialized" nullable="true" comment="Conditions Serialized"/>
+        <column xsi:type="smallint" name="is_active" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Is Active"/>
+        <column xsi:type="decimal" name="base_service_fee" scale="4" precision="20" unsigned="false" nullable="true"/>
+    </table>
+</schema>

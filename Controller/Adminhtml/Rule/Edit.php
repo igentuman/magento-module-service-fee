@@ -1,0 +1,98 @@
+<?php
+/*
+ * This module was made as test task during recruitment.
+ *
+ * MIT License
+ *
+ * Copyright (c) 2023 Siarhei Astapchyk <igentuman@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+declare(strict_types=1);
+
+namespace Igentu\ServiceFee\Controller\Adminhtml\Rule;
+
+use Igentu\ServiceFee\Controller\Adminhtml\Rule;
+use Igentu\ServiceFee\Model\RuleFactory;
+use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\View\Result\Page;
+use Magento\Backend\Model\View\Result\Redirect;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Registry;
+use Magento\Framework\View\Result\PageFactory;
+
+class Edit extends Rule
+{
+
+    /**
+     * @var PageFactory $resultPageFactory
+     */
+    protected $resultPageFactory;
+
+    /**
+     * @param Context $context
+     * @param Registry $coreRegistry
+     * @param RuleFactory $ruleFactory
+     * @param PageFactory $resultPageFactory
+     */
+    public function __construct(
+        Context     $context,
+        Registry    $coreRegistry,
+        RuleFactory $ruleFactory,
+        PageFactory $resultPageFactory
+    )
+    {
+        $this->resultPageFactory = $resultPageFactory;
+        parent::__construct($context, $coreRegistry, $ruleFactory);
+    }
+
+    /**
+     * Edit action
+     *
+     * @return ResultInterface
+     */
+    public function execute()
+    {
+        $id = $this->getRequest()->getParam('rule_id');
+        $model = $this->ruleFactory->create();
+
+        if ($id) {
+            $model->load($id);
+            if (!$model->getId()) {
+                $this->messageManager->addErrorMessage(__('This Rule no longer exists.'));
+                /** @var Redirect $resultRedirect */
+                $resultRedirect = $this->resultRedirectFactory->create();
+                return $resultRedirect->setPath('*/*/');
+            }
+        }
+        $this->_coreRegistry->register('servicefee_rule', $model);
+
+        /** @var Page $resultPage */
+        $resultPage = $this->resultPageFactory->create();
+        $this->initPage($resultPage)->addBreadcrumb(
+            $id ? __('Edit Rule') : __('New Rule'),
+            $id ? __('Edit Rule') : __('New Rule')
+        );
+        $resultPage->getConfig()->getTitle()->prepend(__('Rules'));
+        $resultPage->getConfig()->getTitle()->prepend($model->getId() ? __('Edit Rule %1', $model->getId()) : __('New Rule'));
+        return $resultPage;
+    }
+}
+
